@@ -1,0 +1,14 @@
+wget http://s3.amazonaws.com/nanopore-human-wgs/chr11.sorted.bam
+bedtools2/bin/bedtools bamtofastq -i chr11.sorted.bam -fq chr11.fq
+
+minimap2/minimap2 --MD -t 24 -a genome_GRCh38_chr11.fa chr11.fq > mapped.sam
+samtools view -bS mapped.sam > mapped.bam
+samtools sort mapped.bam mapped.sort.bam
+mv mapped.sort.bam.bam mapped.sorted.bam
+samtools index mapped.sorted.bam
+Sniffles-master/bin/sniffles-core-1.0.11/sniffles -m mapped.sorted.bam -v variants.vcf
+
+
+
+
+

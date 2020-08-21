@@ -1,0 +1,46 @@
+cd /data/work/home/iwkusmirek/canu
+
+./canu-1.5/Linux-amd64/bin/canu -p impact_raw -d impact_raw genomeSize=3.8m -nanopore-raw /data/work/home/iwkusmirek/canu/dataset/rrwick/acinetobacter_pittii/albacore.fastq gnuplotTested=true
+
+./canu-1.5/Linux-amd64/bin/canu -p impact_fake_qual -d impact_fake_qual genomeSize=3.8m -nanopore-raw /data/work/home/iwkusmirek/canu/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq gnuplotTested=true
+
+./canu-1.5/Linux-amd64/bin/canu -p impact_fasta -d impact_fasta genomeSize=3.8m -nanopore-raw /data/work/home/iwkusmirek/canu/dataset/rrwick/acinetobacter_pittii/albacore.fasta gnuplotTested=true
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_long_reads/impact_raw/impact_raw.contigs.fasta -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_long_reads/impact_fake_qual/impact_fake_qual.contigs.fasta -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_long_reads/impact_fasta/impact_fasta.contigs.fasta -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+
+
+
+minimap2/minimap2 -x ava-ont -t8 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fastq quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fastq | gzip -1 > quality_evaluation/impact/de_novo_assembly_long_reads/albacore.paf.gz
+miniasm/miniasm/miniasm -f quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fastq quality_evaluation/impact/de_novo_assembly_long_reads/albacore.paf.gz > miniasm_albacore.gfa
+awk '/^S/{print ">"$2"\n"$3}' miniasm_albacore.gfa | fold > miniasm_albacore.fa
+
+minimap2/minimap2 -x ava-ont -t8 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq | gzip -1 > quality_evaluation/impact/de_novo_assembly_long_reads/albacore_fake_qual.paf.gz
+miniasm/miniasm/miniasm -f quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq quality_evaluation/impact/de_novo_assembly_long_reads/albacore_fake_qual.paf.gz > miniasm_albacore_fake_qual.gfa
+awk '/^S/{print ">"$2"\n"$3}' miniasm_albacore_fake_qual.gfa | fold > miniasm_albacore_fake_qual.fa
+
+minimap2/minimap2 -x ava-ont -t8 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fasta quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fasta | gzip -1 > quality_evaluation/impact/de_novo_assembly_long_reads/albacore_fasta.paf.gz
+miniasm/miniasm/miniasm -f quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fasta quality_evaluation/impact/de_novo_assembly_long_reads/albacore_fasta.paf.gz > miniasm_albacore_fasta.gfa
+awk '/^S/{print ">"$2"\n"$3}' miniasm_albacore_fasta.gfa | fold > miniasm_albacore_fasta.fa
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_long_reads/miniasm_albacore.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_long_reads/miniasm_albacore_fake_qual.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_long_reads/miniasm_albacore_fasta.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt

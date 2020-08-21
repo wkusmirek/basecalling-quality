@@ -1,0 +1,30 @@
+============================================== albacore =============================================
+docker run --rm -it -v quality_evaluation/basecallers_comparison/Serratia_marcescens:quality_evaluation/basecallers_comparison/Serratia_marcescens -w quality_evaluation/basecallers_comparison/Serratia_marcescens robegan21/albacore read_fast5_basecaller.py -f FLO-MIN106 -k SQK-LSK108 -i raw_fast5 -t 12 -s quality_evaluation/basecallers_comparison/Serratia_marcescens -o fastq --disable_filtering --disable_pings
+cd workspace
+cat * > ../basecalled_reads/albacore.fastq
+
+============================================== Causalcall ==========================================
+docker run --rm -it -v Chiron/chiron/model:/opt/chiron/chiron/model -v quality_evaluation/basecallers_comparison/Serratia_marcescens:quality_evaluation/basecallers_comparison/Serratia_marcescens -w quality_evaluation/basecallers_comparison/Serratia_marcescens wkusmirek/causalcall bash -c 'CUDA_VISIBLE_DEVICES=cuda_id python /causalcall/basecall.py -i raw_fast5 -o causalcall_results -m /causalcall/model/DNAmodel'
+cd quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads
+find ../causalcall_results/result/ -name '*fastq' -type f -exec cat {} \; > causalcall.fastq
+
+============================================== chiron =============================================  
+docker run --rm -it -v Chiron/chiron/model:/opt/chiron/chiron/model -v quality_evaluation/basecallers_comparison/Serratia_marcescens:quality_evaluation/basecallers_comparison/Serratia_marcescens -w quality_evaluation/basecallers_comparison/Serratia_marcescens wkusmirek/chiron chiron call -i raw_fast5 -o chiron_results
+cd quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads
+cat ../chiron_results/result/*fastq > chiron.fastq
+
+============================================== flappie =============================================
+docker run --rm -it -v quality_evaluation/basecallers_comparison/Serratia_marcescens:quality_evaluation/basecallers_comparison/Serratia_marcescens -w quality_evaluation/basecallers_comparison/Serratia_marcescens caspargross/flappie:v1.1.0 bash
+find raw_fast5 -name \*.fast5 | parallel -P 12 -X flappie --model r941_native > flappie_v"$v".fastq
+
+============================================== guppy =============================================
+docker run --rm -it -v quality_evaluation/basecallers_comparison/Serratia_marcescens:quality_evaluation/basecallers_comparison/Serratia_marcescens -w quality_evaluation/basecallers_comparison/Serratia_marcescens nanozoo/guppy_cpu guppy_basecaller --config /opt/ont/guppy/data/dna_r9.4.1_450bps_fast.cfg -i raw_fast5 -s guppy_default
+docker run --rm -it -v quality_evaluation/basecallers_comparison/trained_models:quality_evaluation/basecallers_comparison/trained_models -v quality_evaluation/basecallers_comparison/Serratia_marcescens:quality_evaluation/basecallers_comparison/Serratia_marcescens -w quality_evaluation/basecallers_comparison/Serratia_marcescens nanozoo/guppy_cpu guppy_basecaller --model quality_evaluation/basecallers_comparison/trained_models/holtlab_custom_kp_r9.4_r9.4.1_nov_2018.jsn --config /opt/ont/guppy/data/dna_r9.4.1_450bps_fast.cfg -i raw_fast5 -s guppy_custom_kp_model
+docker run --rm -it -v quality_evaluation/basecallers_comparison/trained_models:quality_evaluation/basecallers_comparison/trained_models -v quality_evaluation/basecallers_comparison/Serratia_marcescens:quality_evaluation/basecallers_comparison/Serratia_marcescens -w quality_evaluation/basecallers_comparison/Serratia_marcescens nanozoo/guppy_cpu guppy_basecaller --model quality_evaluation/basecallers_comparison/trained_models/holtlab_custom_kp_big_net_r9.4_r9.4.1_nov_2018.jsn --config /opt/ont/guppy/data/dna_r9.4.1_450bps_fast.cfg -i raw_fast5 -s guppy_custom_kp_big_net_model
+cat ../guppy_default/*fastq > guppy_default.fastq
+cat ../guppy_custom_kp_model/*fastq > guppy_custom_kp_model.fastq
+cat ../guppy_custom_kp_big_net_model/*fastq > guppy_custom_kp_big_net_model.fastq
+
+============================================== nanonet =============================================
+docker run --rm -it -v quality_evaluation/basecallers_comparison/Serratia_marcescens:quality_evaluation/basecallers_comparison/Serratia_marcescens -w quality_evaluation/basecallers_comparison/Serratia_marcescens adbailey4/nanonet-2d --fastq --jobs 16 --min_len 0 --max_len 1000000 --chemistry r9.4 raw_fast5 nanonet_results
+cat quality_evaluation/basecallers_comparison/Serratia_marcescens/nanonet* > quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads/nanonet.fastq

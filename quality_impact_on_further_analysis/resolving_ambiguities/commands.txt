@@ -1,0 +1,62 @@
+abyss-pe name=rrwick_acinetobacter_pittii k=51 in='quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/SRR387321.2_1.fastq quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/SRR387321.2_2.fastq'
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-scaffolds.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+abyss-pe name=rrwick_acinetobacter_pittii k=51 in='quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/SRR9696885_1.fastq quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/SRR9696885_2.fastq'
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-scaffolds.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+abyss-pe name=rrwick_acinetobacter_pittii k=51 in='quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R2.fq'
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-scaffolds.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+abyss-pe name=rrwick_acinetobacter_pittii k=51 in='quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R2.fq' long=longlib longlib='quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fastq'
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-long-scaffs.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+abyss-pe name=rrwick_acinetobacter_pittii k=51 in='quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R2.fq' long=longlib longlib='quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq'
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-long-scaffs.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+abyss-pe name=rrwick_acinetobacter_pittii k=51 in='quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R2.fq' long=longlib longlib='quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fasta'
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-long-scaffs.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+
+
+
+docker run --rm -it -v /tmp:/tmp -v quality_evaluation/impact:quality_evaluation/impact -w quality_evaluation/impact/de_novo_assembly_short_reads pegi3s/spades spades.py -1 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq -2 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R2.fq -o spades
+
+docker run --rm -it -v /tmp:/tmp -v quality_evaluation/impact:quality_evaluation/impact -w quality_evaluation/impact/de_novo_assembly_short_reads pegi3s/spades spades.py -1 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq -2 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R2.fq --nanopore quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fastq -o spades_fastq
+
+docker run --rm -it -v /tmp:/tmp -v quality_evaluation/impact:quality_evaluation/impact -w quality_evaluation/impact/de_novo_assembly_short_reads pegi3s/spades spades.py -1 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq -2 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R2.fq --nanopore quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq -o spades_fake_qual
+
+docker run --rm -it -v /tmp:/tmp -v quality_evaluation/impact:quality_evaluation/impact -w quality_evaluation/impact/de_novo_assembly_short_reads pegi3s/spades spades.py -1 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq -2 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R2.fq --nanopore quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fasta -o spades_fasta
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_short_reads/spades/scaffolds.fasta -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_short_reads/spades_fastq/scaffolds.fasta -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_short_reads/spades_fake_qual/scaffolds.fasta -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/de_novo_assembly_short_reads/spades_fasta/scaffolds.fasta -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt

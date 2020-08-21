@@ -1,0 +1,15 @@
+bbmap/stats.sh quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads/albacore.fastq
+
+bbmap/stats.sh quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads/causalcall.fastq
+
+bbmap/stats.sh quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads/chiron.fastq
+
+bbmap/stats.sh quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads/flappie.fastq
+
+bbmap/stats.sh quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads/guppy_default.fastq
+
+bbmap/stats.sh quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads/guppy_custom_kp_model.fastq
+
+bbmap/stats.sh quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads/guppy_custom_kp_big_net_model.fastq
+
+bbmap/stats.sh quality_evaluation/basecallers_comparison/Serratia_marcescens/basecalled_reads/nanonet.fastq

@@ -1,0 +1,24 @@
+docker run --rm -it -v quality_evaluation/impact:quality_evaluation/impact -w quality_evaluation/impact/correcting_long_reads cmonjeau/lordec lordec-correct -i quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fastq -2 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq -k 31 -o quality_evaluation/impact/correcting_long_reads/lordec_fastq.fa -s 1
+
+docker run --rm -it -v quality_evaluation/impact:quality_evaluation/impact -w quality_evaluation/impact/correcting_long_reads cmonjeau/lordec lordec-correct -i quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq -2 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq -k 31 -o quality_evaluation/impact/correcting_long_reads/lordec_fake_qual.fa -s 1
+
+docker run --rm -it -v quality_evaluation/impact:quality_evaluation/impact -w quality_evaluation/impact/correcting_long_reads cmonjeau/lordec lordec-correct -i quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fasta -2 quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq -k 31 -o quality_evaluation/impact/correcting_long_reads/lordec_fasta.fa -s 1
+
+
+bbmap/stats.sh quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fastq
+
+bbmap/stats.sh quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq
+
+bbmap/stats.sh quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fasta
+
+bbmap/stats.sh quality_evaluation/impact/correcting_long_reads/canu_fastq.fa
+
+bbmap/stats.sh quality_evaluation/impact/correcting_long_reads/canu_fake_qual.fa
+
+bbmap/stats.sh quality_evaluation/impact/correcting_long_reads/canu_fasta.fa
+
+bbmap/stats.sh quality_evaluation/impact/correcting_long_reads/lordec_fastq.fa
+
+bbmap/stats.sh quality_evaluation/impact/correcting_long_reads/lordec_fake_qual.fa
+
+bbmap/stats.sh quality_evaluation/impact/correcting_long_reads/lordec_fasta.fa

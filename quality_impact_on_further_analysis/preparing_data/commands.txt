@@ -1,0 +1,23 @@
+cd quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii
+
+wget https://bridges.monash.edu/ndownloader/files/14260217
+mv 14260217 Acinetobacter_pittii_16-377-0801_reference.fasta.gz
+gzip -d Acinetobacter_pittii_16-377-0801_reference.fasta.gz
+mv Acinetobacter_pittii_16-377-0801_reference.fasta ref.fa
+
+cp quality_evaluation/basecallers_comparison/Acinetobacter_pittii/basecalled_reads/albacore.fastq .
+seqtk seq -a albacore.fastq > albacore.fasta
+bbmap/reformat.sh in=albacore.fasta out=albacore_fake_qual.fastq
+
+wget https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos1/sra-pub-run-2/SRR387321/SRR387321.2
+sratoolkit.2.8.2-1-ubuntu64/bin/fastq-dump --split-files SRR387321.2
+
+wget https://sra-download.ncbi.nlm.nih.gov/traces/sra45/SRR/009469/SRR9696885
+sratoolkit.2.8.2-1-ubuntu64/bin/fastq-dump --split-files SRR9696885
+
+cd pIRS_111
+./pirs simulate -i quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa -e 0.01 -a 1 -o test -x 50 -m 400 -v 40
+gzip -d test_100_400_1.fq.gz
+gzip -d test_100_400_2.fq.gz
+mv test_100_400_1.fq quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R1.fq
+mv test_100_400_2.fq quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/reads_R2.fq

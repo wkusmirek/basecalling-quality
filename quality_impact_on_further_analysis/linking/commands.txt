@@ -1,0 +1,88 @@
+docker run --rm -it -v /tmp:/tmp -v quality_evaluation/impact:quality_evaluation/impact -w quality_evaluation/impact/linking wkusmirek/dnaasm dnaasm -scaffold -contigs_file_path quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-8.fa -long_reads_file_path quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fastq -kmer_size 15 -gapfilling 0 -min_contig_length 0 -distance 2000 -step 1 -min_links 5 -min_lpr 5 -min_reads 5 -max_ratio 0.4 -output_file_name dnaasm-link-albacore-fastq.fa
+
+docker run --rm -it -v /tmp:/tmp -v quality_evaluation/impact:quality_evaluation/impact -w quality_evaluation/impact/linking wkusmirek/dnaasm dnaasm -scaffold -contigs_file_path quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-8.fa -long_reads_file_path quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq -kmer_size 15 -gapfilling 0 -min_contig_length 0 -distance 2000 -step 1 -min_links 5 -min_lpr 5 -min_reads 5 -max_ratio 0.4 -output_file_name dnaasm-link-albacore-fake-qual.fa
+
+docker run --rm -it -v /tmp:/tmp -v quality_evaluation/impact:quality_evaluation/impact -w quality_evaluation/impact/linking wkusmirek/dnaasm dnaasm -scaffold -contigs_file_path quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-8.fa -long_reads_file_path quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fasta -kmer_size 15 -gapfilling 0 -min_contig_length 0 -distance 2000 -step 1 -min_links 5 -min_lpr 5 -min_reads 5 -max_ratio 0.4 -output_file_name dnaasm-link-albacore-fasta.fa
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/linking/dnaasm-link-albacore-fastq.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/linking/dnaasm-link-albacore-fake-qual.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/linking/dnaasm-link-albacore-fasta.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+
+
+
+
+
+cd links_v1.8.5
+echo "quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fastq" > albacore_fastq.txt
+echo "quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq" > albacore_fake_qual.txt
+echo "quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fasta" > albacore_fasta.txt
+
+./LINKS -f quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-8.fa -s albacore_fastq.txt -b result -k 15 -d 1000 -e 0.1 -l 5 -t 5
+mv result.scaffolds.fa quality_evaluation/impact/linking/links-albacore-fastq.fa
+rm result*
+
+./LINKS -f quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-8.fa -s albacore_fake_qual.txt -b result -k 15 -d 1000 -e 0.1 -l 5 -t 5
+mv result.scaffolds.fa quality_evaluation/impact/linking/links-albacore-fake-qual.fa
+rm result*
+
+./LINKS -f quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-8.fa -s albacore_fasta.txt -b result -k 15 -d 1000 -e 0.1 -l 5 -t 5
+mv result.scaffolds.fa quality_evaluation/impact/linking/links-albacore-fasta.fa
+rm result*
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/linking/links-albacore-fastq.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/linking/links-albacore-fake-qual.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/linking/links-albacore-fasta.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+
+
+
+
+
+cd SSPACE-LongRead_v1-1
+
+rm -r SSPACE-LongRead_v1-1/results
+perl SSPACE-LongRead.pl -c quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-8.fa -p quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fastq -b results -k 1 -t 32 -l 5
+cd SSPACE-LongRead_v1-1/results
+mv scaffolds.fasta quality_evaluation/impact/linking/sspace-albacore-fastq.fa
+cd ..
+
+rm -r SSPACE-LongRead_v1-1/results
+perl SSPACE-LongRead.pl -c quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-8.fa -p quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore_fake_qual.fastq -b results -k 1 -t 32 -l 5
+cd SSPACE-LongRead_v1-1/results
+mv scaffolds.fasta quality_evaluation/impact/linking/sspace-albacore-fake-qual.fa
+cd ..
+
+rm -r SSPACE-LongRead_v1-1/results
+perl SSPACE-LongRead.pl -c quality_evaluation/impact/de_novo_assembly_short_reads/rrwick_acinetobacter_pittii-8.fa -p quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/albacore.fasta -b results -k 1 -t 32 -l 5
+cd SSPACE-LongRead_v1-1/results
+mv scaffolds.fasta quality_evaluation/impact/linking/sspace-albacore-fasta.fa
+cd ..
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/linking/sspace-albacore-fastq.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/linking/sspace-albacore-fake-qual.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
+
+cd quast-4.1
+./quast.py quality_evaluation/impact/linking/sspace-albacore-fasta.fa -R quality_evaluation/impact/dataset/rrwick/acinetobacter_pittii/ref.fa --scaffolds
+less quast_results/latest/report.txt
